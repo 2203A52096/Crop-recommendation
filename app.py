@@ -9,7 +9,7 @@ st.set_page_config(page_title="Crop Recommendation System", layout="centered")
 # Load model and dataset
 @st.cache_data
 def load_model():
-    with open("crop_model.pkl", "rb") as file:
+    with open("model.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
