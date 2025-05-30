@@ -2,34 +2,45 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+import os
 
-# Set up page
+from sklearn.preprocessing import LabelEncoder
+
+# Streamlit Page Configuration
 st.set_page_config(page_title="Crop Recommendation System", layout="centered")
 
-# Load model and dataset
-@st.cache_data
+# Load model and label encoder
+@st.cache_resource
 def load_model():
     with open("model.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
+@st.cache_resource
+def load_label_encoder():
+    with open("label_encoder.pkl", "rb") as f:
+        label_encoder = pickle.load(f)
+    return label_encoder
+
 @st.cache_data
 def load_data():
     return pd.read_csv("Crop_recommendation.csv")
 
+# Load assets
 model = load_model()
+label_encoder = load_label_encoder()
 df = load_data()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "Predict Crop", "Data Info"])
 
-# Home Page
+# -------------------- HOME PAGE --------------------
 if page == "Home":
     st.title("🌾 Crop Recommendation System")
     st.markdown("""
 Welcome to the **Crop Recommendation System** built using **Machine Learning**!  
-This tool helps recommend the most suitable crop to grow based on soil nutrients and environmental conditions.
+This system recommends the most suitable crop to grow based on soil and climate conditions.
 
 **Features used:**
 - Nitrogen (N)
@@ -40,10 +51,10 @@ This tool helps recommend the most suitable crop to grow based on soil nutrients
 - pH
 - Rainfall (mm)
 
-Navigate to **'Predict Crop'** from the sidebar to try it out!
+👉 Use the **'Predict Crop'** tab to test it out!
 """)
 
-# Prediction Page
+# -------------------- PREDICTION PAGE --------------------
 elif page == "Predict Crop":
     st.title("🌱 Predict the Best Crop")
 
@@ -57,11 +68,16 @@ elif page == "Predict Crop":
     rainfall = st.number_input("Rainfall (mm)", 20.0, 300.0, 100.0)
 
     if st.button("Recommend Crop"):
-        input_data = np.array([[n, p, k, temperature, humidity, ph, rainfall]])
-        prediction = model.predict(input_data)
-        st.success(f"✅ Recommended Crop: **{prediction[0].capitalize()}**")
+        try:
+            input_data = np.array([[n, p, k, temperature, humidity, ph, rainfall]])
+            prediction = model.predict(input_data)
+            predicted_crop = label_encoder.inverse_transform(prediction)[0]
+            st.success(f"✅ Recommended Crop: **{predicted_crop.capitalize()}**")
+        except Exception as e:
+            st.error("❌ Error during prediction.")
+            st.exception(e)
 
-# Data Info Page
+# -------------------- DATA INFO PAGE --------------------
 elif page == "Data Info":
     st.title("📊 Dataset Overview")
 
