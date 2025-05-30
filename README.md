@@ -92,7 +92,7 @@ The dataset used is _Crop_recommendation.csv_ and contains the following columns
 
 ---
 
-## Solution
+## 🌱 Solution
 
 **Crop Recommendation System**
 
