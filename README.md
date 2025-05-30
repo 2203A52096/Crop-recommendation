@@ -91,3 +91,16 @@ The dataset used is _Crop_recommendation.csv_ and contains the following columns
 * Saved the best-performing model (**Random Forest**) using _pickle_ as _crop_model.pkl_.
 
 ---
+
+## Solution
+
+**Crop Recommendation System**
+
+An app that helps farmers or users find the best crop to grow based on soil nutrients and weather conditions. It uses a machine learning model to predict the most suitable crop by analyzing inputs like nitrogen, phosphorus, potassium levels, temperature, humidity, soil pH, and rainfall.
+
+The app has three main pages:
+
+1. **Home:** Introduces the system and explains what features are used for crop prediction.
+2. **Predict Crop:** Allows users to input soil and climate data to get a recommended crop.
+3. **Data Info:** Shows an overview of the dataset used to train the model, including sample data, statistics, and crop distribution.
+
